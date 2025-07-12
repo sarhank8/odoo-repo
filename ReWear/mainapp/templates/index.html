@@ -1,0 +1,396 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <script>
+document.addEventListener("DOMContentLoaded", function () {
+  fetch('/api/items/?featured=true')
+    .then(response => response.json())
+    .then(data => {
+      const carousel = document.getElementById("carouselItems");
+
+      if (data.length === 0) {
+        carousel.innerHTML = `
+          <div class="carousel-item active">
+            <img src="/placeholder.svg?height=400&width=800" class="d-block w-100" alt="Placeholder Item">
+            <div class="carousel-caption d-none d-md-block">
+              <h5>No Featured Items</h5>
+              <p>Come back later to see what’s trending!</p>
+            </div>
+          </div>`;
+        return;
+      }
+
+      data.forEach((item, index) => {
+        const itemHTML = `
+          <div class="carousel-item ${index === 0 ? "active" : ""}">
+            <img src="${item.image_url || '/placeholder.svg?height=400&width=800'}" class="d-block w-100" alt="${item.name}">
+            <div class="carousel-caption d-none d-md-block">
+              <h5>${item.name}</h5>
+              <p>${item.description || "A beautiful item for your wardrobe."}</p>
+            </div>
+          </div>`;
+        carousel.innerHTML += itemHTML;
+      });
+    })
+    .catch(error => {
+      console.error("Error loading featured items:", error);
+    });
+});
+</script>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ReWear - Revive Fashion. ReWear Your Style.</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <style>
+        :root {
+    --primary-color: #29292B;   /* Jet Black */
+    --secondary-color: #C9C7BA; /* Pale Taupe */
+    --accent-color: #C9C7BA;    /* Pale Taupe for buttons */
+    --text-color: #29292B;      /* Jet Black for text */
+    --light-text-color: #C9C7BA; /* Pale Taupe for muted text */
+}
+        body {
+    font-family: 'Inter', sans-serif;
+    color: var(--text-color);
+    background-color: var(--primary-color); /* Light background */
+}
+
+        /* Custom Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideInLeft {
+            from { opacity: 0; transform: translateX(-50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .animate-fadeIn {
+            animation: fadeIn 1s ease-out forwards;
+        }
+        .animate-fadeIn-delay-1 { animation-delay: 0.3s; }
+        .animate-fadeIn-delay-2 { animation-delay: 0.6s; }
+        .animate-fadeIn-delay-3 { animation-delay: 0.9s; }
+        .animate-fadeIn-delay-4 { animation-delay: 1.2s; }
+
+        .animate-slideInLeft {
+            animation: slideInLeft 0.8s ease-out forwards;
+        }
+        .animate-slideInRight {
+            animation: slideInRight 0.8s ease-out forwards;
+        }
+
+        /* Hero Section Styling */
+        .hero-section {
+             background: linear-gradient(135deg, rgba(201, 199, 186, 0.7) 0%, rgba(223, 221, 207, 0.7) 100%); /* Subtle gradient */
+            padding: 100px 0;
+            text-align: center;
+            overflow: hidden; /* Hide overflow for animations */
+        }
+        .hero-section h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+        .hero-section p {
+            font-size: 1.25rem;
+            color: var(--primary-color);
+            max-width: 700px;
+            margin: 0 auto 40px auto;
+        }
+        .hero-section .btn {
+            font-size: 1.1rem;
+            padding: 12px 30px;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+        }
+        .hero-section .btn-primary {
+        background-color: var(--accent-color);
+        border-color: var(--accent-color);
+        color: var(--primary-color);
+}
+        .hero-section .btn-primary:hover {
+        background-color: #b7b5a6;
+        border-color: #b7b5a6;
+        color: var(--primary-color);
+        transform: translateY(-3px);
+}
+        .hero-section .btn-outline-secondary {
+        border-color: var(--primary-color);
+        color: var(--primary-color);
+}
+        .hero-section .btn-outline-secondary:hover {
+        background-color: var(--primary-color);
+        color: var(--secondary-color);
+        transform: translateY(-3px);
+}
+
+        /* How It Works Section */
+        .how-it-works-section {
+            padding: 80px 0;
+            background-color: var(--secondary-color);
+            text-align: center;
+        }
+        .how-it-works-section h2 {
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 60px;
+            color: var(--primary-color);
+        }
+        .how-it-works-section .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            padding: 30px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            height: 100%; /* Ensure cards are same height */
+        }
+        .how-it-works-section .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+        }
+        .how-it-works-section .card-icon {
+            font-size: 3rem;
+            color: var(--accent-color);
+            margin-bottom: 20px;
+        }
+        .how-it-works-section .card-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--text-color);
+        }
+        .how-it-works-section .card-text {
+            color: var(--light-text-color);
+        }
+
+        /* Featured Items Carousel */
+        .featured-items-section {
+            padding: 80px 0;
+             background-color: #fdfcf7;
+        }
+        .featured-items-section h2 {
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 60px;
+            text-align: center;
+            color: var(--primary-color);
+        }
+        .carousel-item img {
+            border-radius: 10px;
+            object-fit: cover;
+            height: 400px; /* Fixed height for carousel images */
+            width: 100%;
+        }
+        .carousel-caption {
+            background-color: rgba(41, 41, 43, 0.7);
+            border-radius: 0 0 10px 10px;
+            padding: 15px;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            width: 100%;
+            margin: 0;
+        }
+        .carousel-caption h5 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        .carousel-caption p {
+            font-size: 1rem;
+        }
+        .carousel-control-prev-icon,
+        .carousel-control-next-icon {
+            background-color: rgba(0, 0, 0, 0.5);
+            border-radius: 50%;
+            padding: 15px;
+        }
+
+        /* Footer */
+        .footer {
+            background-color: var(--primary-color);
+           color: var(--secondary-color);
+            padding: 40px 0;
+            text-align: center;
+        }
+        .footer a {
+            color: #fff;
+            text-decoration: none;
+            margin: 0 15px;
+            transition: color 0.3s ease;
+        }
+        .footer a:hover {
+            color: var(--accent-color);
+        }
+        .footer p {
+            margin-top: 20px;
+            margin-bottom: 0;
+            font-size: 0.9rem;
+            color: rgba(201, 199, 186, 0.8);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar (Optional, but good practice for a landing page) -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+        <div class="container">
+            <a class="navbar-brand fw-bold fs-4" href="/">ReWear</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#how-it-works">How It Works</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#featured-items">Featured Items</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'signup' %}">Sign Up</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <h1 class="animate-fadeIn">Revive Fashion. ReWear Your Style.</h1>
+            <p class="lead animate-fadeIn animate-fadeIn-delay-1">
+                Swap or redeem unused clothes and contribute to a more sustainable future.
+                Give your wardrobe a fresh look without the environmental cost.
+            </p>
+            <div class="d-grid gap-3 d-sm-flex justify-content-sm-center">
+                <a href="{% url 'signup' %}" class="btn btn-primary btn-lg px-4 animate-fadeIn animate-fadeIn-delay-2">Start Swapping</a>
+                <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary btn-lg px-4 animate-fadeIn animate-fadeIn-delay-3">Browse Items</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section id="how-it-works" class="how-it-works-section">
+        <div class="container">
+            <h2 class="animate-fadeIn">How It Works</h2>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="card animate-fadeIn animate-fadeIn-delay-1">
+                        <div class="card-body">
+                            <div class="card-icon">📦</div>
+                            <h5 class="card-title">Upload Unused Clothes</h5>
+                            <p class="card-text">
+                                Easily list your pre-loved garments. Take a few photos, add a description, and set your preferences.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card animate-fadeIn animate-fadeIn-delay-2">
+                        <div class="card-body">
+                            <div class="card-icon">✨</div>
+                            <h5 class="card-title">Earn or Swap with Points</h5>
+                            <p class="card-text">
+                                Get points for your uploaded items, or directly swap with other users. Discover unique pieces.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card animate-fadeIn animate-fadeIn-delay-3">
+                        <div class="card-body">
+                            <div class="card-icon">🚚</div>
+                            <h5 class="card-title">Receive Items at Your Door</h5>
+                            <p class="card-text">
+                                Once a swap is confirmed, your new items will be shipped directly to you. Enjoy your refreshed style!
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Clothing Items Carousel -->
+    <section id="featured-items" class="featured-items-section">
+        <div class="container">
+            <h2 class="animate-fadeIn">Featured Items</h2>
+            <div id="clothingCarousel" class="carousel slide animate-fadeIn animate-fadeIn-delay-1" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    {% if featured_items %}
+                        {% for item in featured_items %}
+                            <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                                <img src="{{ item.image_url|default:'/placeholder.svg?height=400&width=800' }}" class="d-block w-100" alt="{{ item.name|default:'Featured Item' }}">
+                                <div class="carousel-caption d-none d-md-block">
+                                    <h5>{{ item.name|default:'Stylish Dress' }}</h5>
+                                    <p>{{ item.description|default:'A beautiful item for your wardrobe.' }}</p>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="carousel-item active">
+                            <img src="/placeholder.svg?height=400&width=800" class="d-block w-100" alt="Placeholder Item 1">
+                            <div class="carousel-caption d-none d-md-block">
+                                <h5>Classic Denim Jacket</h5>
+                                <p>Perfect for any season, a timeless addition.</p>
+                            </div>
+                        </div>
+                        <div class="carousel-item">
+                            <img src="/placeholder.svg?height=400&width=800" class="d-block w-100" alt="Placeholder Item 2">
+                            <div class="carousel-caption d-none d-md-block">
+                                <h5>Elegant Evening Gown</h5>
+                                <p>Make a statement at your next event.</p>
+                            </div>
+                        </div>
+                        <div class="carousel-item">
+                            <img src="/placeholder.svg?height=400&width=800" class="d-block w-100" alt="Placeholder Item 3">
+                            <div class="carousel-caption d-none d-md-block">
+                                <h5>Comfortable Knit Sweater</h5>
+                                <p>Cozy and chic for everyday wear.</p>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#clothingCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#clothingCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <nav>
+                <a href="\{% url 'about' %\}">About</a>
+                <a href="\{% url 'contact' %\}">Contact</a>
+                <a href="\{% url 'terms' %\}">Terms</a>
+            </nav>
+            <p>&copy; {% now "Y" %} ReWear. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</body>
+</html>

@@ -1,0 +1,309 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ReWear Dashboard</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <style>
+        :root {
+            --jet-black: #29292B;
+            --pale: #C9C7BA;
+            --pale-darker: #B0AE9F; /* Slightly darker pale for contrast */
+            --muted-red: #A09E90; /* Muted red/brown for redeemed status and danger buttons */
+            --light-bg: #F0F0F0; /* A very light grey for body background */
+        }
+
+        body {
+            background-color: var(--light-bg);
+            color: var(--jet-black); /* Default text color for the main content area */
+        }
+        .navbar {
+            background-color: var(--jet-black) !important; /* Apply Jet Black to navbar */
+        }
+        .navbar-brand, .nav-link {
+            color: var(--pale) !important; /* Pale for navbar links and brand */
+        }
+        .navbar-nav .nav-link.active {
+            color: var(--pale-darker) !important; /* Slightly different active link color */
+        }
+        .profile-img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 3px solid var(--pale); /* Pale border for profile picture */
+        }
+        .card {
+            background-color: var(--jet-black); /* Jet Black for card backgrounds */
+            color: var(--pale); /* Pale for text inside cards */
+            border-radius: 0.75rem;
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+        }
+        .card-title, .card-text, .fs-4, .fw-bold {
+            color: var(--pale) !important; /* Ensure all text elements inside cards are Pale */
+        }
+        .text-muted {
+            color: var(--pale-darker) !important; /* Muted text inside cards */
+        }
+        .text-primary { /* Specifically for points balance */
+            color: var(--pale) !important;
+        }
+        .table {
+            color: var(--jet-black); /* Table text color */
+        }
+        .table thead th {
+            color: var(--jet-black);
+        }
+        .table-hover tbody tr:hover {
+            background-color: rgba(41, 41, 43, 0.05); /* Light hover for table rows */
+        }
+        .table img {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: 0.25rem;
+        }
+        .list-group-item {
+            background-color: var(--jet-black); /* Jet Black for list group items */
+            color: var(--pale);
+            border-color: var(--pale-darker);
+        }
+        .list-group-item-action:hover {
+            background-color: var(--pale-darker); /* Darker Pale on hover */
+            color: var(--jet-black);
+        }
+        .list-group-item h6, .list-group-item p {
+            color: var(--pale) !important;
+        }
+        .list-group-item .text-muted {
+            color: var(--pale-darker) !important;
+        }
+
+        /* Overview section specific styling */
+        .p-3.border.rounded.bg-light {
+            background-color: var(--pale-darker) !important; /* Use darker pale for these boxes */
+            color: var(--jet-black);
+            border-color: var(--pale) !important;
+        }
+        .p-3.border.rounded.bg-light h6, .p-3.border.rounded.bg-light p, .p-3.border.rounded.bg-light small {
+            color: var(--jet-black) !important;
+        }
+
+        /* Status Badges */
+        .status-badge {
+            padding: 0.35em 0.65em;
+            border-radius: 0.375rem;
+            font-size: 0.75em;
+            font-weight: 600;
+            line-height: 1;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: baseline;
+        }
+        .status-available { background-color: var(--pale); color: var(--jet-black); }
+        .status-swapped { background-color: var(--pale-darker); color: var(--jet-black); }
+        .status-redeemed { background-color: var(--muted-red); color: var(--jet-black); }
+
+        /* Buttons */
+        .btn-outline-primary {
+            color: var(--pale);
+            border-color: var(--pale);
+        }
+        .btn-outline-primary:hover {
+            background-color: var(--pale);
+            color: var(--jet-black);
+            border-color: var(--pale);
+        }
+        .btn-success {
+            background-color: var(--pale);
+            border-color: var(--pale);
+            color: var(--jet-black);
+        }
+        .btn-success:hover {
+            background-color: var(--pale-darker);
+            border-color: var(--pale-darker);
+            color: var(--jet-black);
+        }
+        .btn-danger {
+            background-color: var(--muted-red);
+            border-color: var(--muted-red);
+            color: var(--jet-black);
+        }
+        .btn-danger:hover {
+            background-color: #8C8A7D; /* A slightly darker muted red for hover */
+            border-color: #8C8A7D;
+            color: var(--jet-black);
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">ReWear Dashboard</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="#">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">My Items</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Swap Requests</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Settings</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="row g-4">
+            <!-- User Profile Section -->
+            <div class="col-lg-4">
+                <div class="card text-center h-100">
+                    <div class="card-body d-flex flex-column align-items-center justify-content-center">
+                        {% if profile.profile_picture %}
+                            <img src="{{ profile.profile_picture.url }}" alt="Profile Picture" class="profile-img mb-3">
+                        {% else %}
+                            <img src="{% static 'images/default_profile.png' %}" alt="Default Profile Picture" class="profile-img mb-3">
+                        {% endif %}
+                        <h5 class="card-title">{{ request.user.username }}</h5>
+<p class="card-text text-muted">{{ request.user.email }}</p>
+                       <p class="card-text fs-4 fw-bold text-primary">Points: {{ wallet.points }}</p>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- Overview Section -->
+            <div class="col-lg-8">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title mb-4">Overview</h5>
+                        <div class="row text-center">
+                            <div class="col-md-4 mb-3">
+                                <div class="p-3 border rounded bg-light">
+                                    <h6 class="text-muted">Items Listed</h6>
+                                    <p class="fs-3 fw-bold"></p>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="p-3 border rounded bg-light">
+                                    <h6 class="text-muted">Swap Requests</h6>
+                                    <p class="fs-3 fw-bold">{{ swap_requests_made }} / {{ swap_requests_completed }}</p>
+                                    <small class="text-muted">(Made / Completed)</small>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="p-3 border rounded bg-light">
+                                    <h6 class="text-muted">Items Redeemed</h6>
+                                    <p class="fs-3 fw-bold">{{ items_redeemed }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- User's Uploaded Clothing Items Section -->
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title mb-4">My Clothing Items</h5>
+                        {% if user_items %}
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead>
+                                    <tr>
+                                        <th scope="col"></th>
+                                        <th scope="col">Title</th>
+                                        <th scope="col">Status</th>
+                                        <th scope="col">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for item in user_items %}
+                                    <tr>
+                                        <td>
+                                            {% if item.image %}
+                                                <img src="{{ item.image.url }}" alt="{{ item.title }}" class="img-fluid">
+                                            {% else %}
+                                                <img src="{% static 'images/placeholder.svg' %}" alt="Placeholder" class="img-fluid">
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ item.title }}</td>
+                                        <td>
+                                           {% if item.available %}
+    <span class="status-badge status-available">Available</span>
+{% else %}
+    <span class="status-badge status-swapped">Unavailable</span>
+{% endif %}
+
+                                        </td>
+                                        <td>
+                                            <a href="{% url 'edit_item' item.id %}" class="btn btn-sm btn-outline-primary me-2">Edit</a>
+                                            <a href="{% url 'delete_item' item.id %}" class="btn btn-sm btn-outline-danger">Delete</a>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        {% else %}
+                        <p class="text-muted text-center">You haven't listed any clothing items yet.</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Incoming Swap Requests Section -->
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title mb-4">Incoming Swap Requests</h5>
+                        {% if swap_requests %}
+                        <div class="list-group">
+                            {% for request in swap_requests %}
+                            <div class="list-group-item list-group-item-action d-flex align-items-center mb-2 rounded">
+                                {% if request.item.image %}
+                                    <img src="{{ request.item.image.url }}" alt="{{ request.item.title }}" class="img-fluid me-3" style="width: 70px; height: 70px; object-fit: cover; border-radius: 0.5rem;">
+                                {% else %}
+                                    <img src="{% static 'images/placeholder.svg' %}" alt="Placeholder" class="img-fluid me-3" style="width: 70px; height: 70px; object-fit: cover; border-radius: 0.5rem;">
+                                {% endif %}
+                                <div class="flex-grow-1">
+                                    <h6 class="mb-1">Request for: {{ request.item.title }}</h6>
+                                    <p class="mb-1 text-muted">From: {{ request.from_user.username }}</p>
+                                    <p class="mb-0 small text-truncate">Message: {{ request.message }}</p>
+                                </div>
+                                <div class="ms-auto d-flex flex-column flex-md-row">
+                                    <a href="{% url 'accept_swap' request.id %}" class="btn btn-sm btn-success mb-2 mb-md-0 me-md-2">Accept</a>
+                                    <a href="{% url 'decline_swap' request.id %}" class="btn btn-sm btn-danger">Decline</a>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% else %}
+                        <p class="text-muted text-center">No incoming swap requests at the moment.</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</body>
+</html>
